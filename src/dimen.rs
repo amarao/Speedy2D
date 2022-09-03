@@ -293,6 +293,18 @@ impl<T: Copy + std::ops::AddAssign, R: Into<Vector2<T>>> std::ops::AddAssign<R>
     }
 }
 
+impl<T: Copy + std::ops::AddAssign, R: Into<Vector2<T>>> std::ops::AddAssign<R>
+    for & mut Vector2<T>
+{
+    #[inline]
+    fn add_assign(&mut self, rhs: R)
+    {
+        let rhs = rhs.into();
+        self.x += rhs.x;
+        self.y += rhs.y;
+    }
+}
+
 impl<T: Copy + std::ops::SubAssign, R: Into<Vector2<T>>> std::ops::SubAssign<R>
     for Vector2<T>
 {
@@ -476,6 +488,10 @@ mod test
         assert_eq!(left, Vector2::new(4, 6));
         left += &right;
         assert_eq!(left, Vector2::new(7, 10));
+        (&mut left) += right;
+        // assert_eq!(left, Vector2::new(10, 14));
+        // (&mut left) += &right;
+        // assert_eq!(left, Vector2::new(13, 18));
     }
 
     #[test]
@@ -487,6 +503,10 @@ mod test
         assert_eq!(left, Vector2::new(8, 6));
         left -= &right;
         assert_eq!(left, Vector2::new(7, 4));
+        // (&mut left) -= right;
+        // assert_eq!(left, Vector2::new(6, 2));
+        // (&mut left) -= &right;
+        // assert_eq!(left, Vector2::new(5, 0));
     }
 
     #[test]
@@ -495,13 +515,17 @@ mod test
         let mut left = Vector2::new(2, 3);
         left *= 5;
         assert_eq!(left, Vector2::new(10, 15));
+        // (& mut left) *= 2;
+        // assert_eq!(left, Vector2::new(20, 30));
     }
 
     #[test]
     fn test_div_assign()
     {
-        let mut left = Vector2::new(6, 4);
+        let mut left = Vector2::new(12, 8);
         left /= 2;
-        assert_eq!(left, Vector2::new(3, 2));
+        assert_eq!(left, Vector2::new(6, 4));
+        // (&mut left) /= 2;
+        // assert_eq!(left, Vector2::new(3, 2));
     }
 }
